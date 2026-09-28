@@ -1,0 +1,76 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h1 class="admin-title">Projects</h1>
+<form method="post" action="/admin/projects/create">
+  <button class="button button-primary" type="submit">Add project</button>
+</form>
+
+{% for project in projects %}
+<details class="admin-card admin-collapse">
+  <summary>{{ project.project_title }} (order {{ project.order }})</summary>
+  <form class="admin-form" method="post" action="/admin/projects/{{ project.id }}">
+    <div class="field-row">
+      <div class="field">
+        <label for="title-{{ project.id }}">Title</label>
+        <input id="title-{{ project.id }}" name="project_title" type="text" required maxlength="100" value="{{ project.project_title }}">
+      </div>
+      <div class="field field-small">
+        <label for="order-{{ project.id }}">Order</label>
+        <input id="order-{{ project.id }}" name="order" type="number" value="{{ project.order }}">
+      </div>
+    </div>
+    <div class="field">
+      <label for="objective-{{ project.id }}">Objective</label>
+      <textarea id="objective-{{ project.id }}" name="objective" rows="3" maxlength="1000">{{ project.objective }}</textarea>
+    </div>
+    <div class="field">
+      <label for="key_results-{{ project.id }}">Key results (separate with “ | ”)</label>
+      <textarea id="key_results-{{ project.id }}" name="key_results" rows="4">{{ project.key_results }}</textarea>
+    </div>
+    <div class="field">
+      <label for="technologies-{{ project.id }}">Technologies (comma-separated)</label>
+      <input id="technologies-{{ project.id }}" name="technologies" type="text" value="{{ project.technologies }}">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="urls-{{ project.id }}">Link URLs (comma-separated)</label>
+        <input id="urls-{{ project.id }}" name="urls" type="text" value="{{ project.urls }}">
+      </div>
+      <div class="field">
+        <label for="url_titles-{{ project.id }}">Link titles (comma-separated, same order)</label>
+        <input id="url_titles-{{ project.id }}" name="url_titles" type="text" value="{{ project.url_titles }}">
+      </div>
+    </div>
+    <div class="field">
+      <label for="media-{{ project.id }}">Media URLs (comma-separated, uploaded media)</label>
+      <textarea id="media-{{ project.id }}" name="media" rows="2">{{ project.media }}</textarea>
+    </div>
+    <div class="field">
+      <label for="experience-{{ project.id }}">Related experience</label>
+      <select id="experience-{{ project.id }}" name="experience_id">
+        <option value="">— none —</option>
+        {% for option in experience_options %}
+        <option value="{{ option.id }}" {% if option.id == project.experience_id %}selected{% endif %}>{{ option.label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="button button-primary" type="submit">Save</button>
+  </form>
+  <form method="post" action="/admin/projects/{{ project.id }}/delete" data-confirm="Delete this project?">
+    <button class="button button-danger" type="submit">Delete</button>
+  </form>
+</details>
+{% endfor %}
+
+{% if !media_urls.is_empty() %}
+<section class="admin-card">
+  <h2>Available media URLs</h2>
+  <ul class="admin-url-list">
+    {% for url in media_urls %}
+    <li><code>{{ url }}</code></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

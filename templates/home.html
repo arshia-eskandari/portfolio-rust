@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+{% if let Some(site_key) = recaptcha_site_key %}
+<script src="https://www.google.com/recaptcha/api.js?render={{ site_key }}" defer></script>
+{% endif %}
+{% endblock %}
+
+{% block body %}
+{% include "partials/nav.html" %}
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero" aria-label="Introduction">
+    <div class="container hero-inner">
+      <p class="hero-eyebrow"><span class="prompt" aria-hidden="true">$</span> rust · backend · systems</p>
+      <h1 class="hero-title">{{ data.hero.title }}</h1>
+      {% if !data.hero.text.is_empty() %}
+      <p class="hero-text">{{ data.hero.text }}</p>
+      {% endif %}
+      <div class="hero-actions">
+        <a class="button button-primary" href="#work">See my work</a>
+        <a class="button button-ghost" href="#contact">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured / selected work -->
+  {% if let Some(featured) = data.projects.first() %}
+  <section id="work" class="section section-featured" aria-labelledby="work-heading">
+    <div class="container">
+      <h2 id="work-heading" class="section-title"><span class="section-index" aria-hidden="true">01</span> Selected Work</h2>
+      <article class="featured-card">
+        <div class="featured-body">
+          <h3 class="featured-title">{{ featured.title }}</h3>
+          <p class="featured-objective">{{ featured.objective }}</p>
+          {% if !featured.technologies.is_empty() %}
+          <ul class="tech-list" aria-label="Technologies">
+            {% for tech in featured.technologies %}
+            <li class="tech-tag">{{ tech }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <div class="featured-links">
+            <a class="button button-ghost" href="#{{ featured.anchor }}">Project details ↓</a>
+            {% for link in featured.links %}
+            <a class="button button-ghost" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.title }} ↗</a>
+            {% endfor %}
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- About -->
+  <section id="about" class="section" aria-labelledby="about-heading">
+    <div class="container">
+      <h2 id="about-heading" class="section-title"><span class="section-index" aria-hidden="true">02</span> {{ data.about.title }}</h2>
+      <div class="about-layout">
+        <div class="about-copy">
+          <p>{{ data.about.text }}</p>
+        </div>
+        {% if let Some(resume) = data.about.resume_url %}
+        <aside class="about-aside" aria-label="Résumé">
+          <p class="about-aside-label" aria-hidden="true">// résumé</p>
+          <p class="about-aside-text">Prefer a single document? Grab the full résumé.</p>
+          <a class="button button-primary" href="{{ resume }}" target="_blank" rel="noopener noreferrer">Download resume</a>
+        </aside>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  {% if !data.skills.is_empty() %}
+  <section id="skills" class="section" aria-labelledby="skills-heading">
+    <div class="container">
+      <h2 id="skills-heading" class="section-title"><span class="section-index" aria-hidden="true">03</span> Skills &amp; Technology</h2>
+      <ul class="skills-grid" aria-label="Skills">
+        {% for skill in data.skills %}
+        <li class="skill-chip">{{ skill }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Projects -->
+  {% if !data.projects.is_empty() %}
+  <section id="projects" class="section" aria-labelledby="projects-heading">
+    <div class="container">
+      <h2 id="projects-heading" class="section-title"><span class="section-index" aria-hidden="true">04</span> Projects</h2>
+      <div class="project-list">
+        {% for project in data.projects %}
+        <article id="{{ project.anchor }}" class="project-card">
+          <header class="project-header">
+            <h3 class="project-title">{{ project.title }}</h3>
+            {% if !project.technologies.is_empty() %}
+            <ul class="tech-list" aria-label="Technologies">
+              {% for tech in project.technologies %}
+              <li class="tech-tag">{{ tech }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </header>
+          {% if !project.objective.is_empty() %}
+          <p class="project-objective">{{ project.objective }}</p>
+          {% endif %}
+          {% if !project.key_results.is_empty() %}
+          <h4 class="project-subhead">Key results</h4>
+          <ul class="result-list">
+            {% for result in project.key_results %}
+            <li>{{ result }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% if !project.media.is_empty() %}
+          <div class="media-strip">
+            {% for item in project.media %}
+              {% if item.is_image() %}
+              <img class="media-thumb" src="{{ item.url }}" alt="{{ project.title }} — {{ item.name }}" loading="lazy" width="480" height="300">
+              {% else if item.is_video() %}
+              <video class="media-thumb" src="{{ item.url }}" controls preload="none" aria-label="{{ project.title }} video"></video>
+              {% else %}
+              <a class="media-doc" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{{ item.name }}</a>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
+          <footer class="project-footer">
+            {% for link in project.links %}
+            <a class="text-link" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.title }} ↗</a>
+            {% endfor %}
+            {% if let Some(anchor) = project.experience_anchor %}
+            <a class="text-link" href="#{{ anchor }}">Related experience ↓</a>
+            {% endif %}
+          </footer>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Experience -->
+  {% if !data.experiences.is_empty() %}
+  <section id="experience" class="section" aria-labelledby="experience-heading">
+    <div class="container">
+      <h2 id="experience-heading" class="section-title"><span class="section-index" aria-hidden="true">05</span> Experience</h2>
+      <div class="experience-list">
+        {% for experience in data.experiences %}
+        <details id="{{ experience.anchor }}" class="experience-item">
+          <summary class="experience-summary">
+            <span class="experience-role">{{ experience.job_title }}</span>
+            <span class="experience-company">{{ experience.company }}</span>
+            <span class="experience-meta">{{ experience.location }} · {{ experience.date_range }}</span>
+          </summary>
+          <div class="experience-body">
+            {% if !experience.achievements.is_empty() %}
+            <h4 class="project-subhead">Achievements</h4>
+            <ul class="result-list">
+              {% for item in experience.achievements %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            {% if !experience.responsibilities.is_empty() %}
+            <h4 class="project-subhead">Responsibilities</h4>
+            <ul class="result-list">
+              {% for item in experience.responsibilities %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            {% if !experience.recommendation_letter_urls.is_empty() %}
+            <h4 class="project-subhead">Recommendation letters</h4>
+            <ul class="result-list">
+              {% for url in experience.recommendation_letter_urls %}
+              <li><a class="text-link" href="{{ url }}" target="_blank" rel="noopener noreferrer">Recommendation letter {{ loop.index }}</a></li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Recent writing -->
+  {% if !data.recent_articles.is_empty() %}
+  <section id="writing" class="section" aria-labelledby="writing-heading">
+    <div class="container">
+      <h2 id="writing-heading" class="section-title"><span class="section-index" aria-hidden="true">06</span> Recent Writing</h2>
+      <div class="article-grid">
+        {% for article in data.recent_articles %}
+        <article class="article-card">
+          <h3 class="article-card-title"><a href="/articles/{{ article.slug }}">{{ article.title }}</a></h3>
+          <p class="article-card-date"><time datetime="{{ article.published_iso }}">{{ article.published }}</time></p>
+          {% if !article.excerpt.is_empty() %}
+          <p class="article-card-excerpt">{{ article.excerpt }}</p>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+      <p class="section-more"><a class="text-link" href="/articles">All articles →</a></p>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Contact -->
+  <section id="contact" class="section section-contact" aria-labelledby="contact-heading">
+    <div class="container">
+      <h2 id="contact-heading" class="section-title"><span class="section-index" aria-hidden="true">07</span> Contact</h2>
+
+      {% if let Some(message) = flash.ok %}
+      <p class="flash flash-ok" role="status">{{ message }}</p>
+      {% endif %}
+      {% if let Some(message) = flash.err %}
+      <p class="flash flash-err" role="alert">{{ message }}</p>
+      {% endif %}
+
+      <div class="contact-grid">
+        <div class="contact-aside">
+          <p>Have a role, a project, or a question about my work? Send a message — I read everything.</p>
+          <ul class="social-list" aria-label="Profiles">
+            {% if let Some(url) = data.socials.github %}
+            <li><a class="text-link" href="{{ url }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+            {% endif %}
+            {% if let Some(url) = data.socials.linkedin %}
+            <li><a class="text-link" href="{{ url }}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+            {% endif %}
+            {% if let Some(url) = data.socials.telegram %}
+            <li><a class="text-link" href="{{ url }}" target="_blank" rel="noopener noreferrer">Telegram ↗</a></li>
+            {% endif %}
+            {% if let Some(email) = data.socials.email %}
+            <li><a class="text-link" href="mailto:{{ email }}">{{ email }}</a></li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <form class="contact-form" method="post" action="/contact" {% if let Some(site_key) = recaptcha_site_key %}data-recaptcha-key="{{ site_key }}"{% endif %}>
+          <div class="field-row">
+            <div class="field">
+              <label for="first_name">First name</label>
+              <input id="first_name" name="first_name" type="text" required maxlength="50" autocomplete="given-name">
+            </div>
+            <div class="field">
+              <label for="last_name">Last name</label>
+              <input id="last_name" name="last_name" type="text" required maxlength="50" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required maxlength="100" autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="6" required minlength="10" maxlength="2000"></textarea>
+          </div>
+          <div class="field field-trap" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <input type="hidden" name="g-recaptcha-response" value="">
+          <button class="button button-primary" type="submit">Send message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+{% include "partials/footer.html" %}
+{% endblock %}

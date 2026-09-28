@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h1 class="admin-title">Articles</h1>
+<form method="post" action="/admin/articles/create">
+  <button class="button button-primary" type="submit">New draft article</button>
+</form>
+
+{% if articles.is_empty() %}
+<p class="empty-note">No articles yet.</p>
+{% else %}
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Slug</th>
+        <th scope="col">Created</th>
+        <th scope="col">Updated</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for article in articles %}
+      <tr>
+        <td>{{ article.title }}</td>
+        <td><code>{{ article.slug }}</code></td>
+        <td>{{ article.created }}</td>
+        <td>{{ article.updated }}</td>
+        <td class="admin-actions">
+          <a class="button button-ghost" href="/admin/articles/{{ article.id }}">Edit</a>
+          <form method="post" action="/admin/articles/{{ article.id }}/delete" data-confirm="Delete this article?">
+            <button class="button button-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

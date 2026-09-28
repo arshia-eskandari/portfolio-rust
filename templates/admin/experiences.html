@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h1 class="admin-title">Experiences</h1>
+<form method="post" action="/admin/experiences/create">
+  <button class="button button-primary" type="submit">Add experience</button>
+</form>
+
+{% for experience in experiences %}
+<details class="admin-card admin-collapse">
+  <summary>{{ experience.job_title }} — {{ experience.company }}</summary>
+  <form class="admin-form" method="post" action="/admin/experiences/{{ experience.id }}">
+    <div class="field-row">
+      <div class="field">
+        <label for="job_title-{{ experience.id }}">Job title</label>
+        <input id="job_title-{{ experience.id }}" name="job_title" type="text" required maxlength="100" value="{{ experience.job_title }}">
+      </div>
+      <div class="field">
+        <label for="company-{{ experience.id }}">Company</label>
+        <input id="company-{{ experience.id }}" name="company" type="text" required maxlength="100" value="{{ experience.company }}">
+      </div>
+      <div class="field">
+        <label for="location-{{ experience.id }}">Location</label>
+        <input id="location-{{ experience.id }}" name="location" type="text" required maxlength="100" value="{{ experience.location }}">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="start_date-{{ experience.id }}">Start date</label>
+        <input id="start_date-{{ experience.id }}" name="start_date" type="date" required value="{{ experience.start_date }}">
+      </div>
+      <div class="field">
+        <label for="end_date-{{ experience.id }}">End date (empty = present)</label>
+        <input id="end_date-{{ experience.id }}" name="end_date" type="date" value="{{ experience.end_date }}">
+      </div>
+    </div>
+    <div class="field">
+      <label for="achievements-{{ experience.id }}">Achievements (separate with “ | ”)</label>
+      <textarea id="achievements-{{ experience.id }}" name="achievements" rows="4">{{ experience.achievements }}</textarea>
+    </div>
+    <div class="field">
+      <label for="responsibilities-{{ experience.id }}">Responsibilities (separate with “ | ”)</label>
+      <textarea id="responsibilities-{{ experience.id }}" name="responsibilities" rows="4">{{ experience.responsibilities }}</textarea>
+    </div>
+    <div class="field">
+      <label for="letters-{{ experience.id }}">Recommendation letter URLs (comma-separated, uploaded media)</label>
+      <textarea id="letters-{{ experience.id }}" name="recommendation_letter_urls" rows="2">{{ experience.recommendation_letter_urls }}</textarea>
+    </div>
+    <button class="button button-primary" type="submit">Save</button>
+  </form>
+  <form method="post" action="/admin/experiences/{{ experience.id }}/delete" data-confirm="Delete this experience?">
+    <button class="button button-danger" type="submit">Delete</button>
+  </form>
+</details>
+{% endfor %}
+{% endblock %}

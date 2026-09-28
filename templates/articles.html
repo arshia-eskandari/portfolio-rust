@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "partials/nav.html" %}
+<main id="main" class="page">
+  <div class="container container-narrow">
+    <header class="page-header">
+      <h1 class="page-title">Articles</h1>
+      <p class="page-lede">Notes on Rust, backend engineering and building software.</p>
+    </header>
+
+    <form class="search-form" method="get" action="/articles" role="search">
+      <label class="sr-only" for="q">Search articles</label>
+      <input id="q" name="q" type="search" placeholder="Search by title or tag…" value="{{ query }}">
+      <button class="button button-ghost" type="submit">Search</button>
+    </form>
+
+    {% if cards.is_empty() %}
+    <p class="empty-note">No articles matched{% if !query.is_empty() %} “{{ query }}”{% endif %}.</p>
+    {% else %}
+    <div class="article-list">
+      {% for article in cards %}
+      <article class="article-card">
+        <h2 class="article-card-title"><a href="/articles/{{ article.slug }}">{{ article.title }}</a></h2>
+        <p class="article-card-date">
+          <time datetime="{{ article.published_iso }}">{{ article.published }}</time>
+          {% if let Some(updated) = article.updated %}
+          · Updated <time datetime="{{ article.updated_iso.as_deref().unwrap_or("") }}">{{ updated }}</time>
+          {% endif %}
+        </p>
+        {% if !article.excerpt.is_empty() %}
+        <p class="article-card-excerpt">{{ article.excerpt }}</p>
+        {% endif %}
+        {% if !article.tags.is_empty() %}
+        <ul class="tag-list" aria-label="Tags">
+          {% for tag in article.tags %}
+          <li class="tag">#{{ tag }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</main>
+{% include "partials/footer.html" %}
+{% endblock %}

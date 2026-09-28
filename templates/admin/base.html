@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ meta.title }}</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/static/favicon.svg?v=2" type="image/svg+xml">
+  <link rel="icon" href="/static/favicon.ico?v=2" sizes="32x32">
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=2">
+  <link rel="stylesheet" href="/static/css/main.css?v=2">
+</head>
+<body class="admin-body">
+<div class="admin-shell">
+  <nav class="admin-sidebar" aria-label="Admin navigation">
+    <p class="admin-brand">Portfolio Admin</p>
+    <ul class="admin-nav">
+      <li><a href="/admin">Dashboard</a></li>
+      <li><a href="/admin/media">Media</a></li>
+      <li><a href="/admin/hero">Hero</a></li>
+      <li><a href="/admin/about">About</a></li>
+      <li><a href="/admin/skills">Skills</a></li>
+      <li><a href="/admin/experiences">Experiences</a></li>
+      <li><a href="/admin/projects">Projects</a></li>
+      <li><a href="/admin/articles">Articles</a></li>
+      <li><a href="/admin/contacts">Contact inbox</a></li>
+      <li><a href="/admin/socials">Social links</a></li>
+    </ul>
+    <ul class="admin-nav admin-nav-bottom">
+      <li><a href="/" target="_blank" rel="noopener">View site ↗</a></li>
+      <li>
+        <form method="post" action="/logout">
+          <button class="linklike" type="submit">Log out</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+  <main id="main" class="admin-main">
+    {% if let Some(message) = flash.ok %}
+    <p class="flash flash-ok" role="status">{{ message }}</p>
+    {% endif %}
+    {% if let Some(message) = flash.err %}
+    <p class="flash flash-err" role="alert">{{ message }}</p>
+    {% endif %}
+    {% block admin_content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

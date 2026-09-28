@@ -1,0 +1,72 @@
+[package]
+name = "portfolio-rust"
+version = "0.1.0"
+edition = "2024"
+description = "Server-rendered Rust portfolio website (Axum + Askama + OxiMod)"
+publish = false
+
+[lib]
+name = "portfolio"
+path = "src/lib.rs"
+
+[[bin]]
+name = "portfolio"
+path = "src/main.rs"
+
+[dependencies]
+# Web framework
+axum = { version = "0.8", features = ["multipart", "macros"] }
+axum-extra = { version = "0.10", features = ["cookie"] }
+tokio = { version = "1", features = ["full"] }
+tower = "0.5"
+tower-http = { version = "0.7", features = ["trace", "fs", "compression-gzip", "compression-br", "limit", "set-header"] }
+
+# Templates
+askama = "0.16"
+askama_web = { version = "0.16", features = ["axum-0.8"] }
+
+# Database (OxiMod ODM over the official MongoDB driver)
+oximod = "1.0.1"
+mongodb = "3.8"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Markdown + syntax highlighting (server-side, no client JS required)
+comrak = "0.55"
+syntect = { version = "5", default-features = false, features = ["default-fancy"] }
+
+# Auth
+jsonwebtoken = { version = "11", features = ["rust_crypto"] }
+sha2 = "0.10"
+subtle = "2"
+uuid = { version = "1", features = ["v4"] }
+
+# AWS S3 media storage
+aws-config = { version = "1", features = ["behavior-version-latest"] }
+aws-sdk-s3 = "1"
+
+# HTTP client (reCAPTCHA verification)
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+
+# Utilities
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+chrono-tz = "0.10"
+dotenvy = "0.15"
+infer = "0.22"
+percent-encoding = "2"
+thiserror = "2"
+time = "0.3"
+unicode-normalization = "0.1"
+
+# Observability
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+http-body-util = "0.1"
+
+[profile.release]
+lto = "thin"
+strip = "symbols"

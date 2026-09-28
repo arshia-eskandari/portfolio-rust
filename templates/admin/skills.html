@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h1 class="admin-title">Skills</h1>
+<form class="admin-card admin-form" method="post" action="/admin/skills">
+  <div class="field">
+    <label for="skills">Skills (comma-separated)</label>
+    <textarea id="skills" name="skills" rows="6" required>{{ skills_csv }}</textarea>
+  </div>
+  <button class="button button-primary" type="submit">Save</button>
+</form>
+{% endblock %}

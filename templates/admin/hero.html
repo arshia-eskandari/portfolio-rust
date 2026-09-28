@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h1 class="admin-title">Hero</h1>
+<form class="admin-card admin-form" method="post" action="/admin/hero">
+  <div class="field">
+    <label for="title">Title</label>
+    <input id="title" name="title" type="text" required maxlength="150" value="{{ title }}">
+  </div>
+  <div class="field">
+    <label for="text">Text</label>
+    <textarea id="text" name="text" rows="4" required maxlength="1000">{{ text }}</textarea>
+  </div>
+  <button class="button button-primary" type="submit">Save</button>
+</form>
+{% endblock %}

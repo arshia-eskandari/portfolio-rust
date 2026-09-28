@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "partials/nav.html" %}
+<main id="main" class="page">
+  <article class="container container-prose">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/articles">Articles</a></li>
+        <li aria-current="page">{{ article.title }}</li>
+      </ol>
+    </nav>
+
+    <header class="article-header">
+      <h1 class="article-title">{{ article.title }}</h1>
+      <p class="article-byline">
+        By Arshia Eskandari ·
+        <time datetime="{{ article.published_iso }}">{{ article.published }}</time>
+        {% if let Some(updated) = article.updated %}
+        · Updated <time datetime="{{ article.updated_iso }}">{{ updated }}</time>
+        {% endif %}
+      </p>
+      {% if !article.tags.is_empty() %}
+      <ul class="tag-list" aria-label="Tags">
+        {% for tag in article.tags %}
+        <li class="tag">#{{ tag }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </header>
+
+    {% if let Some(banner) = article.banner %}
+    <figure class="article-banner">
+      <img src="{{ banner }}" alt="{{ article.title }} banner" width="1200" height="675">
+    </figure>
+    {% endif %}
+
+    <div class="prose">
+      {{ article.html|safe }}
+    </div>
+
+    <footer class="article-footer">
+      <a class="text-link" href="/articles">← All articles</a>
+    </footer>
+  </article>
+</main>
+{% include "partials/footer.html" %}
+{% endblock %}

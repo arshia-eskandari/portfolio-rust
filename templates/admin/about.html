@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h1 class="admin-title">About</h1>
+<form class="admin-card admin-form" method="post" action="/admin/about">
+  <div class="field">
+    <label for="title">Title</label>
+    <input id="title" name="title" type="text" required maxlength="150" value="{{ title }}">
+  </div>
+  <div class="field">
+    <label for="text">Text</label>
+    <textarea id="text" name="text" rows="8" required maxlength="1500">{{ text }}</textarea>
+  </div>
+  <div class="field">
+    <label for="resume_url">Resume (uploaded PDF)</label>
+    <select id="resume_url" name="resume_url">
+      <option value="">— none —</option>
+      {% for option in pdf_options %}
+      <option value="{{ option.url }}" {% if option.url == resume_url %}selected{% endif %}>{{ option.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="image_url">Portrait (uploaded image)</label>
+    <select id="image_url" name="image_url">
+      <option value="">— none —</option>
+      {% for option in image_options %}
+      <option value="{{ option.url }}" {% if option.url == image_url %}selected{% endif %}>{{ option.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button class="button button-primary" type="submit">Save</button>
+</form>
+{% endblock %}

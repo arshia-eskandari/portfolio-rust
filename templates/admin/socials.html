@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h1 class="admin-title">Social links</h1>
+<form class="admin-card admin-form" method="post" action="/admin/socials">
+  <div class="field">
+    <label for="linkedin">LinkedIn URL</label>
+    <input id="linkedin" name="linkedin" type="url" maxlength="200" value="{{ linkedin }}">
+  </div>
+  <div class="field">
+    <label for="github">GitHub URL</label>
+    <input id="github" name="github" type="url" maxlength="200" value="{{ github }}">
+  </div>
+  <div class="field">
+    <label for="telegram">Telegram URL</label>
+    <input id="telegram" name="telegram" type="url" maxlength="200" value="{{ telegram }}">
+  </div>
+  <div class="field">
+    <label for="email">Email address</label>
+    <input id="email" name="email" type="email" maxlength="200" value="{{ email }}">
+  </div>
+  <p class="admin-hint">Empty fields keep their current stored value.</p>
+  <button class="button button-primary" type="submit">Save</button>
+</form>
+{% endblock %}
